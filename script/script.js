@@ -20,33 +20,30 @@ window.addEventListener('DOMContentLoaded', () => {
 			return { differenceDate, hours, minutes, seconds };
 		};
 
+		const getTrueTime = ( elem, objElem ) => {
+
+			if (objElem < 10) {
+				elem.textContent = '0' + objElem;
+			} else {
+				elem.textContent = objElem;
+			}
+
+		};
+
 		const updateClock = () => {
 			const timer = getDifferenceTime();
 
-			if (timer.seconds < 10) {
-				timerSeconds.textContent = '0' + timer.seconds;
-			} else {
-				timerSeconds.textContent = timer.seconds;
-			}
-
-			if (timer.minutes < 10) {
-				timerMinutes.textContent = '0' + timer.minutes;
-			} else {
-				timerMinutes.textContent = timer.minutes;
-			}
-
-			if (timer.hours < 10) {
-				timerHours.textContent = '0' + timer.hours;
-			} else {
-				timerHours.textContent = timer.hours;
-			}
-
 			if (timer.differenceDate <= 0) {
 				clearInterval(idInterval);
-				timerSeconds.textContent = '00';
-				timerMinutes.textContent = '00';
-				timerHours.textContent = '00';
+				timer.seconds = 0;
+				timer.minutes = 0;
+				timer.hours = 0;
 			}
+
+			getTrueTime(timerSeconds, timer.seconds);
+			getTrueTime(timerMinutes, timer.minutes);
+			getTrueTime(timerHours, timer.hours);
+
 		};
 
 		const idInterval = setInterval(updateClock, 1000);
@@ -77,7 +74,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 	menuToggle();
 
-	//PopUp
+	// PopUp
 	const popUpToggle = () => {
 		const popupBtnElems = document.querySelectorAll('.popup-btn'),
 			popupBtnClose = document.querySelector('.popup-close'),
@@ -131,6 +128,39 @@ window.addEventListener('DOMContentLoaded', () => {
 	};
 
 	popUpToggle();
+
+	// Smooth scrolling
+	const getSmoothScrolling = () => {
+		
+		const menuList = document.querySelector('menu>ul');
+
+		menuList.addEventListener( 'click', e => {
+			e.preventDefault();
+			const idMenu = e.target.href;
+			const idSlide = idMenu.substr(22);
+
+			const slide = document.querySelector(`${idSlide}`);
+			const slidePosition = slide.getBoundingClientRect();
+
+			const scrolling = setInterval(() => {
+
+				if (document.documentElement.scrollTop < slidePosition.top) {
+
+					scrollBy(0, 20);
+					
+				} else {
+
+					clearInterval(scrolling);
+
+				}
+
+			}, 1);
+			
+
+		});
+
+	};
+	getSmoothScrolling();
 
 });
 

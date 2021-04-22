@@ -38,8 +38,8 @@
       "always"
     ],
     "strict": [
-      "error",
-      "global"
+      // "error",
+      // "global"
     ],
     "brace-style": [
       "error",
