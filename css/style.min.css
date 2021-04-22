@@ -322,6 +322,9 @@ main .main-form .form-btn {
 
 main a {
     display: inline-block;
+    width:49px;
+    height: 49px;
+    background: url(../images/scroll.svg) no-repeat center center;
     margin: 3rem auto;
     -webkit-transition: 1s;
     transition: 1s

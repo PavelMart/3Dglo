@@ -130,34 +130,38 @@ window.addEventListener('DOMContentLoaded', () => {
 	popUpToggle();
 
 	// Smooth scrolling
+	const getScroll = ( e ) => {
+
+		e.preventDefault();
+		const link = e.target.href;
+		const id = link.substr(22);
+
+		const slide = document.querySelector(`${id}`);
+		const slidePosition = slide.offsetTop;
+
+		const scrolling = setInterval(() => {
+
+			if (document.documentElement.scrollTop < slidePosition) {
+
+				scrollBy(0, 20);
+				
+			} else {
+
+				clearInterval(scrolling);
+
+			}
+
+		}, 1);
+
+	};
+	
 	const getSmoothScrolling = () => {
 		
-		const menuList = document.querySelector('menu>ul');
+		const menuList = document.querySelector('menu > ul');
+		const linkToFirstSlide = document.querySelector('main a');
 
-		menuList.addEventListener( 'click', e => {
-			e.preventDefault();
-			const idMenu = e.target.href;
-			const idSlide = idMenu.substr(22);
-
-			const slide = document.querySelector(`${idSlide}`);
-			const slidePosition = slide.getBoundingClientRect();
-
-			const scrolling = setInterval(() => {
-
-				if (document.documentElement.scrollTop < slidePosition.top) {
-
-					scrollBy(0, 20);
-					
-				} else {
-
-					clearInterval(scrolling);
-
-				}
-
-			}, 1);
-			
-
-		});
+		linkToFirstSlide.addEventListener( 'click', getScroll );
+		menuList.addEventListener( 'click', getScroll );
 
 	};
 	getSmoothScrolling();
