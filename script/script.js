@@ -1,8 +1,8 @@
-window.addEventListener( 'DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', () => {
 	'use strict';
 
 	// Timer
-	function countTimer(deadLine) {
+	const countTimer = deadLine => {
 
 		const timerHours = document.querySelector('#timer-hours'),
 			timerMinutes = document.querySelector('#timer-minutes'),
@@ -51,9 +51,86 @@ window.addEventListener( 'DOMContentLoaded', () => {
 
 		const idInterval = setInterval(updateClock, 1000);
 
-	}
+	};
 
-	countTimer('22 april 2021');
+	countTimer('25 april 2021');
+
+	// Menu
+	const menuToggle = () => {
+
+		const btnMenu = document.querySelector('.menu'),
+			menu = document.querySelector('menu'),
+			btnMenuClose = document.querySelector('.close-btn'),
+			menuItems = document.querySelectorAll('li');
+
+		const handlerMenu = () => {
+			menu.classList.toggle('active-menu');
+		};
+
+		btnMenu.addEventListener('click', handlerMenu);
+
+		btnMenuClose.addEventListener('click', handlerMenu);
+
+		menuItems.forEach(item => item.addEventListener('click', handlerMenu));
+
+	};
+
+	menuToggle();
+
+	//PopUp
+	const popUpToggle = () => {
+		const popupBtnElems = document.querySelectorAll('.popup-btn'),
+			popupBtnClose = document.querySelector('.popup-close'),
+			popup = document.querySelector('.popup'),
+			popupContent = document.querySelector('.popup-content');
+
+		popupBtnElems.forEach(elem => {
+			elem.addEventListener('click', () => {
+				
+
+				if (document.documentElement.offsetWidth <= 768) {
+
+					popup.style.display = 'block';
+
+				} else {
+
+					popup.style.display = 'block';
+					popup.style.opacity = 0;
+					popupContent.style.opacity = 0;
+
+					let count = 0;
+
+					const timer = setInterval(() => {
+
+						count += 0.1;
+
+						if (count <= 1) {
+
+							popup.style.opacity = `${count}`;
+							popupContent.style.opacity = `${count}`;
+
+						} else {
+
+							popup.style.opacity = `1`;
+							popupContent.style.opacity = `1`;
+							clearInterval(timer);
+							return;
+
+						}
+
+					}, 20);
+
+				}
+
+			});
+		});
+
+		popupBtnClose.addEventListener('click', () => {
+			popup.style.display = 'none';
+		});
+	};
+
+	popUpToggle();
 
 });
 
