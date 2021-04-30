@@ -374,7 +374,18 @@ window.addEventListener('DOMContentLoaded', () => {
 		}); 
 		
 		// calculation
-		calcBlock.addEventListener('change', () => {
+		calcBlock.addEventListener('change', event => {
+			const target = event.target;
+			const notNumbers = /\D/g;
+
+			if (target.tagName === 'INPUT') {
+				if (notNumbers.test(target.value)) {
+					alert('Некорректные данные! Введите необходимое число цифрами!');
+					target.value = '';
+					return;
+				}
+			} 
+
 			let sum = 0,
 				countRoom = 1,
 				countDay = 1;
