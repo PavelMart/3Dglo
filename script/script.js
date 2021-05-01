@@ -351,7 +351,7 @@ window.addEventListener('DOMContentLoaded', () => {
 	};
 	slider();
 
-	// calculator
+	// Calculator
 	const calculator = (price) => {
 		const calcBlock = document.querySelector('.calc-block'),
 			calcType = document.querySelector('.calc-type'),
@@ -427,6 +427,75 @@ window.addEventListener('DOMContentLoaded', () => {
 	};
 	changePhoto();
 
+	// FormValidation
+	const formValidation = () => {
+		const formElems = document.querySelectorAll('form');
+		const inputElems = document.querySelectorAll('form input');
+		const regularNameText = /[а-яёА-ЯЁ-\s]/g;
+		const regularEmail = /[a-zA-Z\-\@\_\.\!\~\*\']/g;
+		const regularPhone = /[\d-\(\)]/g;
+		const regularInvertNameText = /[^а-яёА-ЯЁ-\s]/g;
+		const regularInvertEmail = /[^a-zA-Z\-\@\_\.\!\~\*\']/g;
+		const regularInvertPhone = /[^\d-\(\)]/g;
+
+		formElems.forEach( item => {
+
+			item.addEventListener('keypress', event => {
+				const key = event.key;
+				const target = event.target;			
+	
+				if (target.tagName === 'INPUT' && (target.name === 'user_name' || target.name === 'user_message')) {
+					if (!key.match(regularNameText)) {
+						event.preventDefault();
+					}
+				} 
+
+				if (target.tagName === 'INPUT' && target.name === 'user_email') {
+					if (!key.match(regularEmail)) {
+						event.preventDefault();
+					}
+				} 
+
+				if (target.tagName === 'INPUT' && target.name === 'user_phone') {
+					if (!key.match(regularPhone)) {
+						event.preventDefault();
+					}
+				} 
+
+			}); 
+			
+		});
+		
+		inputElems.forEach( item => {
+			item.addEventListener('blur', event => {
+
+				const target = event.target;
+
+				if ( target.name === 'user_name') {
+
+					target.value = target.value.replace(regularInvertNameText, '');
+
+				}
+
+				if (target.name === 'user_email') {
+					
+					target.value = target.value.replace(regularInvertEmail, '');	
+
+				} 
+
+				if (target.name === 'user_phone') {
+					
+					target.value = target.value.replace(regularInvertPhone, '');
+
+				} 
+				
+				
+
+			});
+		});
+
+	};
+	formValidation();
 
 });
 
