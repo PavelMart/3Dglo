@@ -428,7 +428,7 @@ window.addEventListener('DOMContentLoaded', () => {
 	changePhoto();
 
 	// FormValidation
-	const formValidation = () => {
+	/* const formValidation = () => {
 		const formElems = document.querySelectorAll('form');
 		const inputElems = document.querySelectorAll('form input');
 		const regularNameText = /[а-яёА-ЯЁ-\s]/g;
@@ -495,7 +495,81 @@ window.addEventListener('DOMContentLoaded', () => {
 		});
 
 	};
-	formValidation();
+	formValidation(); */
+
+
+	const valid1 = new Validator({
+		selector: '#form1',
+		pattern: {
+			tel: /^\+?[78]([-()]*\d){10}$/,
+			text: /[а-яёА-ЯЁ-\s]/g,
+			email: /[a-zA-Z\-\@\_\.\!\~\*\']/g,
+		},
+		method: {
+			'text': [
+				['notEmpty'],
+				['pattern', 'text'],
+			],
+			'tel': [
+				['notEmpty'],
+				['pattern', 'tel'],
+			],
+			'email': [
+				['notEmpty'],
+				['pattern', 'email'],
+			],
+		},
+	});
+
+	const valid2 = new Validator({
+		selector: '#form2',
+		pattern: {
+			tel: /^\+?[78]([-()]*\d){10}$/,
+			text: /[а-яёА-ЯЁ-\s]/g,
+			email: /[a-zA-Z\-\@\_\.\!\~\*\']/g,
+		},
+		method: {
+			'text': [
+				['notEmpty'],
+				['pattern', 'text'],
+			],
+			'tel': [
+				['notEmpty'],
+				['pattern', 'tel'],
+			],
+			'email': [
+				['notEmpty'],
+				['pattern', 'email'],
+			],
+		},
+	});
+
+	const valid3 = new Validator({
+		selector: '#form3',
+		pattern: {
+			tel: /^\+?[78]([-()]*\d){10}$/,
+			text: /[а-яёА-ЯЁ-\s]/g,
+			email: /[a-zA-Z\-\@\_\.\!\~\*\']/g,
+		},
+		method: {
+			'text': [
+				['notEmpty'],
+				['pattern', 'text'],
+			],
+			'tel': [
+				['notEmpty'],
+				['pattern', 'tel'],
+			],
+			'email': [
+				['notEmpty'],
+				['pattern', 'email'],
+			],
+		},
+	});
+
+	valid1.init();
+	valid2.init();
+	valid3.init();
 
 });
 
