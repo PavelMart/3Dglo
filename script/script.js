@@ -549,25 +549,30 @@ window.addEventListener('DOMContentLoaded', () => {
 
 		const statusMessage = document.createElement('div');
 
-		const postData = (data, outputFn, errorFn) => {
-			const request = new XMLHttpRequest();
+		const postData = (data) => {
+			return new Promise ((resolve, reject) => {
 
-			request.addEventListener('readystatechange', event => {
+				const request = new XMLHttpRequest();
+	
+				request.addEventListener('readystatechange', event => {
+	
+					if (request.readyState !== 4) {
+						return;
+					}
+	
+					if (request.status === 200) {
+						statusMessage.textContent = successMessage;
+						resolve();
+					} else {
+						reject(request.status);
+					}
+				});
+	
+				request.open('POST', './server.php');
+				request.setRequestHeader('Content-Type', 'application/json');
+				request.send(JSON.stringify(data));
 
-				if (request.readyState !== 4) {
-					return;
-				}
-
-				if (request.status === 200) {
-					outputFn();
-				} else {
-					errorFn(request.status);
-				}
 			});
-
-			request.open('POST', './server.php');
-			request.setRequestHeader('Content-Type', 'application/json');
-			request.send(JSON.stringify(data));
 		};
 
 		const clearInput = (form) => {
@@ -603,15 +608,11 @@ window.addEventListener('DOMContentLoaded', () => {
 					formJSON[key] = item;
 				});
 	
-				postData(formJSON, 
-					() => {
-						statusMessage.textContent = successMessage;
-					}, 
-					(error) => {
+				postData(formJSON)
+					.catch(error => {
 						statusMessage.textContent = errorMessage;
 						console.error(error);
-					}
-				);
+					});
 
 				clearInput(form);
 	
