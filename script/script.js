@@ -51,7 +51,6 @@ window.addEventListener('DOMContentLoaded', () => {
 		idInterval = setInterval(updateClock, 1000);
 
 	};
-
 	countTimer('26 april 2021 19:10');
 
 	// Menu
@@ -431,12 +430,12 @@ window.addEventListener('DOMContentLoaded', () => {
 	const formValidation = () => {
 		const formElems = document.querySelectorAll('form');
 		const inputElems = document.querySelectorAll('form input');
-		const regularNameText = /[а-яёА-ЯЁ-\s]/g;
-		const regularEmail = /[a-zA-Z\-\@\_\.\!\~\*\']/g;
-		const regularPhone = /[\d-\(\)]/g;
-		const regularInvertNameText = /[^а-яёА-ЯЁ-\s]/g;
+		const regularNameText = /[а-яёА-ЯЁ\s]/;
+		const regularEmail = /[a-zA-Z\-\@\_\.\!\~\*\']/;
+	const regularText = /[а-яёА-ЯЁ\s\d\.,\!\?]/;
+		const regularInvertNameText = /[^а-яёА-ЯЁ\s]/g;
 		const regularInvertEmail = /[^a-zA-Z\-\@\_\.\!\~\*\']/g;
-		const regularInvertPhone = /[^\d-\(\)]/g;
+		const regularInvertText = /[^а-яёА-ЯЁ\s\d\.,\!\?]/g;
 
 		formElems.forEach( item => {
 
@@ -444,7 +443,7 @@ window.addEventListener('DOMContentLoaded', () => {
 				const key = event.key;
 				const target = event.target;			
 	
-				if (target.tagName === 'INPUT' && (target.name === 'user_name' || target.name === 'user_message')) {
+				if (target.tagName === 'INPUT' && (target.name === 'user_name')) {
 					if (!key.match(regularNameText)) {
 						event.preventDefault();
 					}
@@ -456,8 +455,8 @@ window.addEventListener('DOMContentLoaded', () => {
 					}
 				} 
 
-				if (target.tagName === 'INPUT' && target.name === 'user_phone') {
-					if (!key.match(regularPhone)) {
+				if (target.tagName === 'INPUT' && target.name === 'user_message') {
+					if (!key.match(regularText)) {
 						event.preventDefault();
 					}
 				} 
@@ -483,9 +482,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
 				} 
 
-				if (target.name === 'user_phone') {
+				if (target.name === 'user_message') {
 					
-					target.value = target.value.replace(regularInvertPhone, '');
+					target.value = target.value.replace(regularInvertText, '');
 
 				} 
 				
@@ -496,6 +495,135 @@ window.addEventListener('DOMContentLoaded', () => {
 
 	};
 	formValidation();
+
+	// PhoneValidation
+	const phoneValidation = () => {
+		const inputPhoneElems = document.querySelectorAll('[name = "user_phone"]');
+
+		const showSuccess = (elem) => {
+			elem.style.backgroundColor = '';
+		};
+		
+		const showError = (elem) => {
+			elem.style.backgroundColor = '#FF8B73';
+		};
+
+		const isValid = (value, regular) => {
+			return regular.test(value);
+		};
+
+		const checkInput = (elem) => {
+			const inputValue = elem.value,
+				regularPhone = /^\+?[78]([-()]*\d){10}$/;
+
+			if (isValid(inputValue, regularPhone)) {
+				showSuccess(elem);
+				return true;
+			} else {
+				showError(elem);
+				return false;
+			}
+
+		};
+
+		inputPhoneElems.forEach( elem => {
+			elem.addEventListener('change', event => {
+				const target = event.target;
+
+				target.dataset.flag = checkInput(target);
+			});
+		});
+
+	};
+	phoneValidation();
+
+	// Send-Ajax-Form
+	const sendForm = () => {
+		const errorMessage = 'Что-то пошло не так...',
+			loadMessage = 'Загрузка...',
+			successMessage = 'Спасибо! Мы с Вами скоро свяжемся!';
+		
+		const form1 = document.getElementById('form1'),
+			form2 = document.getElementById('form2'),
+			form3 = document.getElementById('form3');
+
+		const statusMessage = document.createElement('div');
+
+		const postData = (data, outputFn, errorFn) => {
+			const request = new XMLHttpRequest();
+
+			request.addEventListener('readystatechange', event => {
+
+				if (request.readyState !== 4) {
+					return;
+				}
+
+				if (request.status === 200) {
+					outputFn();
+				} else {
+					errorFn(request.status);
+				}
+			});
+
+			request.open('POST', './server.php');
+			request.setRequestHeader('Content-Type', 'application/json');
+			request.send(JSON.stringify(data));
+		};
+
+		const clearInput = (form) => {
+			const inputElems = form.querySelectorAll('input'),
+				textAreaElem = form.querySelector('text-area');
+
+			inputElems.forEach( elem => {
+				elem.value = '';
+			});
+
+			if (textAreaElem) {
+				textAreaElem.value = '';
+			}
+		};
+
+		const submitListener = (form) => {
+			form.addEventListener('submit', event => {
+				event.preventDefault();
+
+				const inputPhone = form.querySelector('[name = "user_phone"]');
+				if (inputPhone.dataset.flag === 'false') {
+					return;
+				}
+
+				form.append(statusMessage);
+	
+				statusMessage.textContent = loadMessage;
+	
+				const formData = new FormData(form),
+					formJSON = {};
+	
+				formData.forEach( (item, key) => {
+					formJSON[key] = item;
+				});
+	
+				postData(formJSON, 
+					() => {
+						statusMessage.textContent = successMessage;
+					}, 
+					(error) => {
+						statusMessage.textContent = errorMessage;
+						console.error(error);
+					}
+				);
+
+				clearInput(form);
+	
+			});
+		};
+
+		submitListener(form1);
+		submitListener(form2);
+		submitListener(form3);
+
+	};
+	sendForm();
 
 });
 
