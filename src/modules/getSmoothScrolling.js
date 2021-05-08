@@ -7,7 +7,12 @@ const getSmoothScrolling = () => {
 
         e.preventDefault();
         const link = e.target.href;
-        const id = link.substr(23);
+
+        if (!link) {
+            return;
+        }
+
+        const id = link.match(/\#\D+/g);
 
         const slide = document.querySelector(`${id}`);
         const slidePosition = slide.offsetTop;

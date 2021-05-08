@@ -8,6 +8,7 @@ const sendForm = () => {
         form3 = document.getElementById('form3');
 
     const statusMessage = document.createElement('div');
+    statusMessage.style.color = 'white';
 
     const postData = (data) => {
         return fetch('./server.php', {
@@ -36,8 +37,10 @@ const sendForm = () => {
         form.addEventListener('submit', event => {
             event.preventDefault();
 
-            const inputPhone = form.querySelector('[name = "user_phone"]');
-            if (inputPhone.dataset.flag === 'false') {
+            const inputName = form.querySelector('[name = "user_name"]');
+            const inputEmail = form.querySelector('[name = "user_email"]');
+
+            if (inputName.dataset.flag === 'false' || inputEmail.dataset.flag === 'false') {
                 return;
             }
 
@@ -58,6 +61,16 @@ const sendForm = () => {
                         throw new Error('status network not 200');
                     }
                     statusMessage.textContent = successMessage;
+                })
+                .then(() => {
+                    const popup = document.querySelector('.popup');
+                    setTimeout(() => {
+                        if (popup.style.display !== 'none') {
+                            popup.style.display = 'none';
+                        }
+
+                        statusMessage.textContent = '';
+                    }, 3000);
                 })
                 .catch(error => {
                     statusMessage.textContent = errorMessage;

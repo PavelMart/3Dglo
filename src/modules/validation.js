@@ -4,74 +4,104 @@ const validation = () => {
     const formValidation = () => {
         const formElems = document.querySelectorAll('form');
         const inputElems = document.querySelectorAll('form input');
+
         const regularNameText = /[а-яёА-ЯЁ\s]/;
-        const regularEmail = /[a-zA-Z\-\@\_\.\!\~\*\']/;
+        const regularEmail = /[a-zA-Z\-\@\_\d\.]/;
         const regularText = /[а-яёА-ЯЁ\s\d\.,\!\?]/;
+        const regularPhone = /[\+\d()]/;
         const regularInvertNameText = /[^а-яёА-ЯЁ\s]/g;
-        const regularInvertEmail = /[^a-zA-Z\-\@\_\.\!\~\*\']/g;
+        const regularInvertEmail = /[^a-zA-Z\-\@\_\d\.]/g;
+        const regularInvertPhone = /[^\+\d()]/g;
         const regularInvertText = /[^а-яёА-ЯЁ\s\d\.,\!\?]/g;
 
+        const tabooInput = (event, name, regExp) => {
+            const key = event.key;
+            const target = event.target;
+
+            if (target.tagName === 'INPUT' && (target.name === name)) {
+                if (!key.match(regExp)) {
+                    event.preventDefault();
+                }
+            } 
+        };
+
+        const removeNotAllowed = (event, name, regExp) => {
+            const target = event.target;
+
+            if ( target.name === name) {
+                target.value = target.value.replace(regExp, '');
+            }
+
+            if (name === 'user_name') {
+                const firstLetter = target.value.match(regularNameText)[0].toUpperCase();
+                target.value = target.value.replace(regularNameText, firstLetter);
+                target.value = target.value.replace(/\s{2,}/g, ' ');
+            } else {
+                return;
+            }
+        };
+
         formElems.forEach( item => {
-
             item.addEventListener('keypress', event => {
-                const key = event.key;
-                const target = event.target;			
+                const target = event.target;
 
-                if (target.tagName === 'INPUT' && (target.name === 'user_name')) {
-                    if (!key.match(regularNameText)) {
-                        event.preventDefault();
-                    }
+                switch (target.name) {
+                    case 'user_name':
+                        tabooInput(event, 'user_name', regularNameText);
+                        break;
+                    case 'user_email':
+                        tabooInput(event, 'user_email', regularEmail);
+                        break;
+                    case 'user_phone':
+                        tabooInput(event, 'user_phone', regularPhone);
+                        break;
+                    case 'user_message':
+                        tabooInput(event, 'user_message', regularText);
+                        break;
                 } 
-
-                if (target.tagName === 'INPUT' && target.name === 'user_email') {
-                    if (!key.match(regularEmail)) {
-                        event.preventDefault();
-                    }
-                } 
-
-                if (target.tagName === 'INPUT' && target.name === 'user_message') {
-                    if (!key.match(regularText)) {
-                        event.preventDefault();
-                    }
-                } 
-
             }); 
-            
         });
         
         inputElems.forEach( item => {
             item.addEventListener('blur', event => {
-
                 const target = event.target;
 
-                if ( target.name === 'user_name') {
-
-                    target.value = target.value.replace(regularInvertNameText, '');
-
+                switch (target.name) {
+                    case 'user_name':
+                        if (target.value) {
+                            removeNotAllowed(event, 'user_name', regularInvertNameText);
+                        }
+                        break;
+                    case 'user_email':
+                        if (target.value) {
+                            removeNotAllowed(event, 'user_email', regularInvertEmail);
+                        }
+                        break;
+                    case 'user_phone':
+                        if (target.value) {
+                            removeNotAllowed(event, 'user_phone', regularInvertPhone);
+                        }
+                        break;
+                    case 'user_message':
+                        if (target.value) {
+                            removeNotAllowed(event, 'user_message', regularInvertText);
+                        }
+                        break;
                 }
-
-                if (target.name === 'user_email') {
-                    
-                    target.value = target.value.replace(regularInvertEmail, '');	
-
-                } 
-
-                if (target.name === 'user_message') {
-                    
-                    target.value = target.value.replace(regularInvertText, '');
-
-                } 
                 
-                
-
             });
         });
 
     };
 
-    // PhoneValidation
-    const phoneValidation = () => {
-        const inputPhoneElems = document.querySelectorAll('[name = "user_phone"]');
+    //PhoneValidation
+    const textEmailValidation = () => {
+        const inputTextElems = document.querySelectorAll('[name = "user_name"]');
+        const inputEmailElems = document.querySelectorAll('[name = "user_email"]');
+        const regularName = /\D{2,}/g;
+        const regularEmail = /\@/g;
+
+
 
         const showSuccess = (elem) => {
             elem.style.backgroundColor = '';
@@ -85,11 +115,10 @@ const validation = () => {
             return regular.test(value);
         };
 
-        const checkInput = (elem) => {
-            const inputValue = elem.value,
-                regularPhone = /^\+?[78]([-()]*\d){10}$/;
+        const checkInput = (elem, regular) => {
+            const inputValue = elem.value;
 
-            if (isValid(inputValue, regularPhone)) {
+            if (isValid(inputValue, regular)) {
                 showSuccess(elem);
                 return true;
             } else {
@@ -99,18 +128,26 @@ const validation = () => {
 
         };
 
-        inputPhoneElems.forEach( elem => {
+        inputTextElems.forEach( elem => {
             elem.addEventListener('change', event => {
                 const target = event.target;
 
-                target.dataset.flag = checkInput(target);
+                target.dataset.flag = checkInput(target, regularName);
+            });
+        });
+
+        inputEmailElems.forEach( elem => {
+            elem.addEventListener('change', event => {
+                const target = event.target;
+
+                target.dataset.flag = checkInput(target, regularEmail);
             });
         });
 
     };
 
     formValidation();
-    phoneValidation();
+    textEmailValidation();
 };
 
 export default validation;

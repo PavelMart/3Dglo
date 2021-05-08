@@ -14,6 +14,10 @@ const menuToggle = () => {
             handlerMenu();
         }
 
+        if (target.closest('.menu')) {
+            handlerMenu();
+        }
+
         menuItems.forEach( item => {
             const targetParent = target.parentNode;
             if ( item === targetParent ) {
@@ -22,13 +26,14 @@ const menuToggle = () => {
 
         });
 
-        target = target.closest('.menu');
+        const menuList = target.closest('menu');
+        const menuBurger = target.closest('.menu');
 
-        if (target) {
-            handlerMenu();
-        } else {
+        if (!menuList && !menuBurger) {
             menu.classList.remove('active-menu');
-        }
+        } 
+            
+    
     });
 
 };

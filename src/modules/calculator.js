@@ -4,6 +4,7 @@ const calculator = (price) => {
         calcSquare = document.querySelector('.calc-square'),
         calcCount = document.querySelector('.calc-count'),
         calcDay = document.querySelector('.calc-day'),
+        calcInputs = calcBlock.querySelectorAll('input'),
         total = document.getElementById('total');
 
     // allowed simbols 
@@ -24,17 +25,25 @@ const calculator = (price) => {
         const target = event.target;
         const notNumbers = /\D/g;
 
-        if (target.tagName === 'INPUT') {
-            if (notNumbers.test(target.value)) {
-                alert('Некорректные данные! Введите необходимое число цифрами!');
-                target.value = '';
-                return;
-            }
-        } 
-
         let sum = 0,
             countRoom = 1,
             countDay = 1;
+
+        calcInputs.forEach( input => {
+            if (notNumbers.test(input.value)) {
+                alert('Некорректные данные! Введите необходимое число цифрами!');
+                input.value = '';
+                return;
+            }
+        });
+
+        if (!calcType.value) {
+            calcInputs.forEach( input => {
+                input.value = '';
+            });
+            total.textContent = sum;
+            return;
+        }
 
         if (calcCount.value && calcCount.value > 1) {
             countRoom += (calcCount.value - 1) / 10;
