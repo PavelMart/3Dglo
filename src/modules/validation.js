@@ -98,10 +98,11 @@ const validation = () => {
     const textEmailValidation = () => {
         const inputTextElems = document.querySelectorAll('[name = "user_name"]');
         const inputEmailElems = document.querySelectorAll('[name = "user_email"]');
-        const regularName = /\D{2,}/g;
-        const regularEmail = /\@/g;
+        const inputPhoneElems = document.querySelectorAll('[name = "user_phone"]');
 
-
+        const regularName = /^[а-яёА-ЯЁ\s]{2,}$/;
+        const regularEmail = /^\w+\@\w+\.\w+$/;
+        const regularPhone = /^\+?[78]\(?\d{3}\)?\d{7}/;
 
         const showSuccess = (elem) => {
             elem.style.backgroundColor = '';
@@ -129,7 +130,7 @@ const validation = () => {
         };
 
         inputTextElems.forEach( elem => {
-            elem.addEventListener('change', event => {
+            elem.addEventListener('input', event => {
                 const target = event.target;
 
                 target.dataset.flag = checkInput(target, regularName);
@@ -137,10 +138,18 @@ const validation = () => {
         });
 
         inputEmailElems.forEach( elem => {
-            elem.addEventListener('change', event => {
+            elem.addEventListener('input', event => {
                 const target = event.target;
 
                 target.dataset.flag = checkInput(target, regularEmail);
+            });
+        });
+
+        inputPhoneElems.forEach( elem => {
+            elem.addEventListener('input', event => {
+                const target = event.target;
+
+                target.dataset.flag = checkInput(target, regularPhone);
             });
         });
 

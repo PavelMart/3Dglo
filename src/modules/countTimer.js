@@ -44,6 +44,7 @@ const countTimer = deadLine => {
 
     };
 
+    updateClock();
     idInterval = setInterval(updateClock, 1000);
 
 };

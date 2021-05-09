@@ -37,10 +37,20 @@ const sendForm = () => {
         form.addEventListener('submit', event => {
             event.preventDefault();
 
-            const inputName = form.querySelector('[name = "user_name"]');
-            const inputEmail = form.querySelector('[name = "user_email"]');
+            const inputName = form.querySelector('[name = "user_name"]'),
+                inputEmail = form.querySelector('[name = "user_email"]'),
+                inputPhone = form.querySelector('[name = "user_phone"]'),
+                inputElems = form.querySelectorAll('input');
 
-            if (inputName.dataset.flag === 'false' || inputEmail.dataset.flag === 'false') {
+            let isEmpty = true;
+
+            inputElems.forEach( elem => {
+                if (elem.value) {
+                    isEmpty = false;
+                }
+            });
+
+            if (isEmpty || inputName.dataset.flag === 'false' || inputEmail.dataset.flag === 'false' || inputPhone.dataset.flag === 'false') {
                 return;
             }
 

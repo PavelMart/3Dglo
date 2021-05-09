@@ -11,7 +11,7 @@ import changePhoto from './modules/changePhoto';
 import validation from './modules/validation';
 import sendForm from './modules/sendForm';
 
-countTimer('9 may 2021');
+countTimer('11 may 2021');
 menuToggle();
 popUpToggle();
 getSmoothScrolling();
