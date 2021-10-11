@@ -53,7 +53,7 @@ window.addEventListener( 'DOMContentLoaded', () => {
 
 	}
 
-	countTimer('10 june 2021');
+	countTimer('13 november 2021');
 
 });
 
